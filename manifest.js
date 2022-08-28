@@ -16,6 +16,7 @@ module.exports = function (isFF) {
         '/content-scripts/page.css.map',
         '/lib/codemirror.min.js',
         '/lib/block-text.js',
+        '/content-scripts/traits.js',
         '/images/wrench.svg'
       ],
       matches: ['<all_urls>']

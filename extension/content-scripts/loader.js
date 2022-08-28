@@ -101,6 +101,7 @@ window.addEventListener('load', () => {
   injectScript([
     '/lib/codemirror.min.js',
     '/lib/block-text.js',
+    '/content-scripts/traits.js',
   ])
   injectStyle([
     '/content-scripts/page.css'
