@@ -1,0 +1,61 @@
+{
+  "name": "spider-hs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build:manifest": "node index.js",
+    "build:static": "copyfiles -u 1 './extension/**/*' -e './extension/**/*.scss' ./build/chrome; copyfiles -u 1 './extension/**/*' -e './extension/**/*.scss' ./build/firefox;",
+    "build:scss": "sass extension:build/chrome build/chrome:build/firefox",
+    "build": "npm-run-all --parallel build:*",
+    "watch:manifest": "onchange 'manifest.js' -- npm run build:manifest",
+    "watch:static": "onchange 'extension/**/*' -- npm run build:static",
+    "watch:scss": "sass --watch extension:build/chrome build/chrome:build/firefox",
+    "dev": "npm-run-all --parallel build:*; npm-run-all --parallel watch:*",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Awesome-E/spider-hs.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Awesome-E/spider-hs/issues"
+  },
+  "homepage": "https://github.com/Awesome-E/spider-hs#readme",
+  "devDependencies": {
+    "@parcel/transformer-sass": "^2.7.0",
+    "eslint": "^7.32.0",
+    "eslint-config-standard": "^16.0.3",
+    "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-jest": "^26.0.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^5.2.0"
+  },
+  "dependencies": {
+    "copyfiles": "^2.4.1",
+    "crx": "^5.0.1",
+    "fs-extra": "^10.0.0",
+    "jest": "^27.4.7",
+    "node-watch": "^0.7.3",
+    "npm-run-all": "^4.1.5",
+    "onchange": "^7.1.0",
+    "parcel": "^2.7.0",
+    "sass": "^1.53.0"
+  },
+  "chrome": "build/chrome/background.js",
+  "firefox": "build/firefox/background.js",
+  "targets": {
+    "main": false,
+    "chrome": {
+      "distDir": "build/chrome",
+      "source": "extension/background.js"
+    },
+    "firefox": {
+      "distDir": "build/firefox",
+      "source": "extension/background.js"
+    }
+  }
+}

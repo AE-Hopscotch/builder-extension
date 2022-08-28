@@ -1,0 +1,29 @@
+{
+  "env": {
+    "browser": true,
+    "commonjs": true,
+    "es2021": true,
+    "node": true
+  },
+  "extends": [
+    "standard"
+  ],
+  "parserOptions": {
+    "ecmaVersion": 12
+  },
+  "globals": {
+    "chrome": "readonly",
+    "browser": "readonly",
+    "jest": "readonly",
+    "test": "readonly",
+    "expect": "readonly",
+    "describe": "readonly",
+    "afterAll": "readonly",
+    "afterEach": "readonly",
+    "beforeAll": "readonly",
+    "beforeEach": "readonly"
+  },
+  "ignorePatterns": ["**/_-*.js"],
+  "rules": {
+  }
+}

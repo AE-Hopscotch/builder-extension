@@ -1,0 +1,113 @@
+$hopscotch-main: #19d8bf;
+
+body._AE_dark-mode {
+  .fullscreen.customblock-composer, .fullscreen.parameter-text-editor, .fullscreen.variable-name-editor, .fullscreen.object-canvas-editor {
+    background-color: #444c;
+  }
+  .fullscreen h2 { color: white; }
+}
+
+._AE-left-btn-container {
+  position: fixed;
+  top: 4px;
+  left: 100px;
+  .ui-button > img {
+    width: 30px;
+    height: 100%;
+    object-fit: contain;
+    pointer-events: none;
+  }
+}
+._AE-hs-tools-keyboard {
+  padding-top: 46px;
+  .keyboard-category-selector {
+    display: flex;
+  }
+  .category-label > p.icon {
+    margin: 0;
+    font-size: 18px;
+    margin-right: 4px;
+  }
+  #_ae-kb-option-selector {
+    display: none;
+    position: fixed;
+    opacity: 0;
+    bottom: 0;
+    left: 0;
+    margin: 4px;
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    appearance: none;
+    -webkit-appearance: none;
+    cursor: pointer;
+  }
+  div.keyboard-blocks-container {
+    color: white;
+    label, div.row {
+      display: flex;
+      align-items: center;
+      margin-bottom: 6px;
+      font-size: 18px;
+      padding: 0 6px;
+    }
+    div.row {
+      margin-bottom: 10px;
+      height: 24px;
+    }
+    input {
+      width: 120px;
+      font-size: 16px;
+      padding: 4px 6px;
+      margin: 0 4px;
+      flex-grow: 1;
+      border: 1px solid #666;
+      border-radius: 2px;
+      &[type="number"] {
+        width: 70px;
+        flex-grow: 0;
+      }
+      &[type="checkbox"] {
+        flex-grow: 0;
+        width: 20px;
+        height: 20px;
+        margin-left: 6px;
+      }
+      &:invalid { border-color: red; }
+      &:focus { outline: 1px solid $hopscotch-main; }
+    }
+    button {
+      margin: 0 4px 0 6px;
+      color: black;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      min-width: 24px;
+      height: 24px;
+      font-size: 16px;
+      i.hs-icon { font-size: 20px; }
+      + i.hs-icon {
+        position: relative;
+        top: -2px;
+        font-size: 16px;
+        margin-left: 6px;
+      }
+      transition: opacity 0.2s;
+      &[hidden] { display: none; }
+    }
+  }
+  @media (max-width: 780px) {
+    padding-top: 0;
+    &.open #_ae-kb-option-selector {
+      display: block;
+    }
+    .category-label > p.icon {
+      margin-right: 0;
+      font-size: 20px;
+    }
+    div.keyboard-blocks-container {
+      color: inherit;
+      > label, div.row { white-space: nowrap; margin-bottom: 0; }
+    }
+  }
+}
