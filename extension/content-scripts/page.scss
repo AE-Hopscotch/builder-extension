@@ -50,19 +50,22 @@ body._AE_dark-mode {
       margin-bottom: 6px;
       font-size: 18px;
       padding: 0 6px;
+      white-space: nowrap;
+      width: fit-content;
     }
     div.row {
       margin-bottom: 10px;
       height: 24px;
     }
     input {
-      width: 120px;
+      width: 70px;
       font-size: 16px;
       padding: 4px 6px;
       margin: 0 4px;
       flex-grow: 1;
       border: 1px solid #666;
       border-radius: 2px;
+      &.expand { width: 100%; }
       &[type="number"] {
         width: 70px;
         flex-grow: 0;
@@ -74,10 +77,13 @@ body._AE_dark-mode {
         margin-left: 6px;
       }
       &:invalid { border-color: red; }
-      &:focus { outline: 1px solid $hopscotch-main; }
+      &:focus {
+        outline: 1px solid $hopscotch-main;
+        &:invalid { outline-color: red; }
+      }
     }
     button {
-      margin: 0 4px 0 6px;
+      margin: 0 0 0 6px;
       color: black;
       display: inline-flex;
       justify-content: center;

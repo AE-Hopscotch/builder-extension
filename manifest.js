@@ -14,6 +14,7 @@ module.exports = function (isFF) {
       resources: [
         '/content-scripts/page.css',
         '/content-scripts/page.css.map',
+        '/content-scripts/codemirror.css',
         '/lib/codemirror.min.js',
         '/lib/block-text.js',
         '/content-scripts/traits.js',
