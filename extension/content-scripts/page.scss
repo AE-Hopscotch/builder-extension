@@ -117,3 +117,25 @@ body._AE_dark-mode {
     }
   }
 }
+
+dialog.save-preset-dialog {
+  display: flex;
+  user-select: none;
+  -webkit-user-select: none;
+  > div {
+    margin: 8px 24px;
+    display: flex;
+    flex-direction: column;
+    color: var(--col-text);
+    h2 {
+      margin-top: 0;
+      width: 100%;
+      text-align: center;
+    }
+    label {
+      font-size: 18px;
+      margin-bottom: 4px;
+    }
+  }
+}
+

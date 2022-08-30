@@ -19,6 +19,7 @@ module.exports = function (isFF) {
         '/lib/block-text.js',
         '/content-scripts/traits.js',
         '/content-scripts/enhancements.js',
+        '/content-scripts/presets.js',
         '/images/wrench.svg'
       ],
       matches: ['<all_urls>']

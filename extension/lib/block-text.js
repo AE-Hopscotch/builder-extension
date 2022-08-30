@@ -1,4 +1,20 @@
 /* eslint-disable no-undef */
+function AEAddButtons (dialog) {
+  const closeBtn = document.createElement('button')
+  closeBtn.classList.add('solid')
+  closeBtn.innerText = 'Close'
+  closeBtn.role = 'cancel'
+  dialog.appendChild(closeBtn)
+
+  const saveBtn = document.createElement('button')
+  saveBtn.classList.add('accent')
+  saveBtn.innerText = 'Save'
+  saveBtn.role = 'save'
+  dialog.appendChild(saveBtn)
+
+  return { closeBtn, saveBtn }
+}
+
 // Right click to edit block
 document.body.addEventListener('contextmenu', e => {
   function closeCustomEditor () {
@@ -14,23 +30,13 @@ document.body.addEventListener('contextmenu', e => {
   if (!block) return
   e.preventDefault()
   const dialog = document.createElement('dialog')
-  dialog.classList.add('fullscreen')
+  dialog.classList.add('fullscreen', 'block-json-editor')
 
   const preview = document.createElement('div')
   preview.classList.add('block-preview')
   dialog.appendChild(preview)
 
-  const closeBtn = document.createElement('button')
-  closeBtn.classList.add('solid')
-  closeBtn.innerText = 'Close'
-  closeBtn.role = 'cancel'
-  dialog.appendChild(closeBtn)
-
-  const saveBtn = document.createElement('button')
-  saveBtn.classList.add('accent')
-  saveBtn.innerText = 'Save'
-  saveBtn.role = 'save'
-  dialog.appendChild(saveBtn)
+  const { closeBtn, saveBtn } = AEAddButtons(dialog)
 
   const textarea = document.createElement('textarea')
   dialog.appendChild(textarea)
