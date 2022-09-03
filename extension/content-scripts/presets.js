@@ -20,6 +20,8 @@ const PresetManager = {
       if (!['BUTTON', 'INPUT'].includes(e.target.tagName)) return
       switch (e.target.id.replace(/^_AE_|_btn$/g, '')) {
         case 'presetsExport': PresetManager.openSavePresetDialog(); break
+        case 'deletedCodeRemove': PresetManager.removeCode(); break
+        case 'unusedCodeRemove': PresetManager.removeCode(true); break
         case 'codeViewExpandAll': PresetManager.printCode()
       }
     })
@@ -99,6 +101,44 @@ const PresetManager = {
 
     document.body.appendChild(dialog)
     dialog.showModal()
+  },
+  removeCode: function (allUnused) {
+    const start = performance.now()
+    const scenes = hsProject.scenes.map(s => s.name)
+    const customRules = allUnused ? [] : hsProject.customRules.map(cr => cr.name)
+    const abilities = allUnused ? [] : hsProject.abilities.filter(a => !!a.name).map(a => a.name)
+    const preset = this.savePreset(hsProject, { scenes, customRules, abilities }, allUnused)
+    const removedCount = {
+      abilities: hsProject.abilities.length - preset.abilities.length,
+      rules: hsProject.rules.length - preset.rules.length,
+      objects: hsProject.objects.length - preset.objects.length,
+      eventParameters: hsProject.eventParameters.length - preset.eventParameters.length,
+      customObjects: hsProject.customObjects.length - preset.customObjects.length,
+      variables: hsProject.variables.length - preset.variables.length
+    }
+    hsProject.abilities = preset.abilities
+    hsProject.rules = preset.rules
+    hsProject.customRules = preset.customRules
+    hsProject.objects = preset.objects
+    hsProject.scenes = preset.scenes
+    hsProject.eventParameters = preset.eventParameters
+    if (allUnused) {
+      hsProject.customObjects = preset.customObjects
+      hsProject.remote_asset_urls = preset.remote_asset_urls
+      hsProject.variables = preset.variables
+    }
+    const str = `%cRemoved all ${allUnused ? 'unused' : 'deleted'} code (${Math.round(performance.now() - start)}ms)%c\n` +
+      `${removedCount.abilities} abilities, ${removedCount.rules} rules, ${removedCount.objects} objects,` +
+      ` ${removedCount.eventParameters} event parameters, ${removedCount.customObjects} custom objects, ` +
+      `${removedCount.variables} variables`
+    const style1 = 'color: white; background: #357; padding: 4px 6px;'
+    console.log(str, style1, 'color: #777; background: #0000')
+
+    // Reload Keyboard
+    const abilityContainer = document.querySelector('[data-blocksource="custom-abilities"]')
+    const customRulesContainer = document.querySelector('[data-blocksource="custom-rules"]')
+    loadBlockList(abilityContainer.parentNode, abilityContainer)
+    loadBlockList(customRulesContainer.parentNode, customRulesContainer)
   },
   savePreset: function (project, namesDict, doCustomObjs) {
     doCustomObjs = doCustomObjs || false
@@ -189,7 +229,7 @@ const PresetManager = {
         const customRuleID = crInstance.customRuleID
         const customRule = ProjectCustomRule.get(customRuleID)
         if (!customRule || cRuleIdList.includes(customRuleID)) return
-        pushRule(customRule.ID)
+        pushRule(customRule.id)
         return
       }
       // If it's a custom rule
@@ -217,8 +257,8 @@ const PresetManager = {
             const rules = stageObject.rules || []
             rules.forEach(r => { pushRule(r) })
             // If it is a custom object, add that to the list
-            if (doCustomObjs && o.customObjectID) {
-              customObjList.push(o.customObjectID)
+            if (doCustomObjs && stageObject.customObjectID) {
+              customObjList.push(stageObject.customObjectID)
             }
           })
         }
