@@ -100,6 +100,7 @@ window.addEventListener('load', () => {
   if (document.querySelector('.viewonly-message')) return
   injectScript([
     '/lib/codemirror.min.js',
+    '/lib/jszip.min.js',
     '/lib/block-text.js',
     '/content-scripts/traits.js',
     '/content-scripts/enhancements.js',
@@ -109,4 +110,13 @@ window.addEventListener('load', () => {
     '/content-scripts/codemirror.css',
     '/content-scripts/page.css'
   ])
+})
+
+document.body.addEventListener('_AE_start-worker', e => {
+  api.runtime.sendMessage({
+    type: 'run-preset-import',
+    arguments: e.detail.arguments
+  }, response => {
+    console.log(response)
+  })
 })

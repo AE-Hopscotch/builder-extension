@@ -155,3 +155,31 @@ dialog.save-preset-dialog {
     }
   }
 }
+
+dialog.load-preset-dialog {
+  user-select: none;
+  -webkit-user-select: none;
+  h2 {
+    max-width: 440px;
+    text-align: center;
+    margin-top: 8px;
+  }
+  label {
+    display: flex;
+    align-items: flex-start;
+    max-width: 400px;
+    margin: auto;
+  }
+  input[type="file"] {
+    width: 365px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+    margin: 16px auto 8px;
+  }
+  button[disabled] {
+    cursor: not-allowed;
+    color: #fff8;
+    opacity: 0.9;
+  }
+}

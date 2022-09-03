@@ -3,7 +3,6 @@ module.exports = function (isFF) {
     name: 'Spider HS',
     description: 'Take the power of Hopscotch Project Builder with you into the Web Explorer!',
     version: '0.1',
-    host_permissions: ['<all_urls>'],
     permissions: [
       'activeTab',
       'tabs',
@@ -16,13 +15,15 @@ module.exports = function (isFF) {
         '/content-scripts/page.css.map',
         '/content-scripts/codemirror.css',
         '/lib/codemirror.min.js',
+        '/lib/jszip.min.js',
         '/lib/block-text.js',
         '/content-scripts/traits.js',
         '/content-scripts/enhancements.js',
         '/content-scripts/presets.js',
+        '/content-scripts/preset-worker.js',
         '/images/wrench.svg'
       ],
-      matches: ['<all_urls>']
+      matches: ['https://explore.gethopscotch.com/*']
     }],
     background: isFF ? { scripts: ['background.js'] } : { service_worker: 'background.js' },
     content_scripts: [
