@@ -103,7 +103,7 @@ const ProjectEnhancer = {
       { id: 'addSetImgBlocks', name: 'Set Image Blocks', button: 'Add' },
       { id: 'optimizeColorSlots', name: 'Color Slots', button: 'Optimize' },
       { id: 'evaluateMath', name: 'Math Operators', button: 'Evaluate' },
-      { id: 'setDarkMode', name: 'Enable Dark Theme', input: 'checkbox', checked: getAEModPref('useDarkMode') },
+      { id: 'setDarkMode', name: 'Force Dark Theme', input: 'checkbox', checked: getAEModPref('useDarkMode') },
       { id: 'restrictOperators', name: 'Restrict Operator Drags', input: 'checkbox' }
     ]
     const html = actions.map(a => {

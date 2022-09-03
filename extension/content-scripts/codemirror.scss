@@ -52,7 +52,7 @@
 .CodeMirror-vscrollbar::-webkit-scrollbar-thumb:hover,.CodeMirror-hscrollbar::-webkit-scrollbar-thumb:hover{background:#939f9d!important}
 .CodeMirror-foldmarker{color:aqua!important;text-shadow:#9df 1px 1px 2px, #9df -1px -1px 2px, #9df 1px -1px 2px, #9df -1px 1px 2px!important}
 .CodeMirror-lint-marker-error{top:3px!important;left:-4px!important}
-dialog{background-color:black;}
+dialog.block-json-editor{background-color:black;}
 dialog.block-json-editor{width:80%;height:75%;}
 dialog::backdrop{backdrop-filter:blur(2px);background-color:#ddda;}
 @media (prefers-color-scheme: dark) { dialog::backdrop{background-color:#444a;} }

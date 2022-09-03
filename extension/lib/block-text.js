@@ -148,11 +148,6 @@ function setAEModPref (name, value) {
 }
 function AEShowDarkMode () {
   const dark = getAEModPref('useDarkMode')
-  const image = `url("${
-    dark ? 'https://files.catbox.moe/kcwhbr.jpeg' : '/images/editor_bg.png'
-  }")`
-  document.documentElement.style.backgroundImage = image
-  document.body.style.backgroundImage = image
   document.body.classList.toggle('_AE_dark-mode', dark)
 }
 AEShowDarkMode()

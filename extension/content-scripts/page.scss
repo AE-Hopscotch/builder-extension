@@ -1,10 +1,26 @@
 $hopscotch-main: #19d8bf;
 
 body._AE_dark-mode {
-  .fullscreen.customblock-composer, .fullscreen.parameter-text-editor, .fullscreen.variable-name-editor, .fullscreen.object-canvas-editor {
-    background-color: #444c;
+  --col-bg-main: black;
+  --col-bg-translucent: #444c;
+  --col-text: #ccc;
+  --time-trans: 0s;
+  --col-close-opt-popup: #111e;
+  --col-bg-toolbar-translucent: #2a2a2aee;
+  --editor-bg: url("/images/editor_dark.jpeg");
+  .operators-keyboard div.param-bubble {
+    background-color: #444;
+    color: var(--col-text);
   }
-  .fullscreen h2 { color: white; }
+  .operators-keyboard div.param-bubble i.hs-sound::before, .operators-keyboard div.param-bubble i.hs-note::before, .operators-keyboard div.param-bubble i.hs-rhythm::before, .operators-keyboard div.param-bubble i.hs-instrument::before {
+    color: inherit;
+  }
+  .fullscreen.customblock-composer > h2,
+  .fullscreen.parameter-text-editor > h2,
+  .fullscreen.variable-name-editor > h2,
+  .fullscreen.object-canvas-editor > h2 {
+    color: white;
+  }
 }
 
 ._AE-left-btn-container {
@@ -122,6 +138,7 @@ dialog.save-preset-dialog {
   display: flex;
   user-select: none;
   -webkit-user-select: none;
+  background-color: var(--col-bg-main);
   > div {
     margin: 8px 24px;
     display: flex;
@@ -138,4 +155,3 @@ dialog.save-preset-dialog {
     }
   }
 }
-
