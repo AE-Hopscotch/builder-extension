@@ -159,6 +159,8 @@ dialog.save-preset-dialog {
 dialog.load-preset-dialog {
   user-select: none;
   -webkit-user-select: none;
+  background-color: var(--col-bg-main);
+  > *:not(button) { color: var(--col-text); }
   h2 {
     max-width: 440px;
     text-align: center;

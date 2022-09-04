@@ -28,7 +28,16 @@ const PresetManager = {
     })
   },
   extendRevisionHandler: function () {
-    //
+    RevisionAction.undoAEOverrideProject = function (info) {
+      hsProject = info.oldData
+      PresetManager.reloadKeyboard()
+      if (info.rerender) PresetManager.rerenderProject()
+    }
+    RevisionAction.redoAEOverrideProject = function (info) {
+      hsProject = info.newData
+      PresetManager.reloadKeyboard()
+      if (info.rerender) PresetManager.rerenderProject()
+    }
   },
   printCode: function (root = document) {
     root.querySelectorAll('#blocks-container > div:not(.collapsible-container) > .block > .openbtn').forEach(s => expandBlock({ target: s }))
@@ -118,6 +127,7 @@ const PresetManager = {
       customObjects: hsProject.customObjects.length - preset.customObjects.length,
       variables: hsProject.variables.length - preset.variables.length
     }
+    const oldProject = Object.detach(hsProject)
     hsProject.abilities = preset.abilities
     hsProject.rules = preset.rules
     hsProject.customRules = preset.customRules
@@ -129,17 +139,15 @@ const PresetManager = {
       hsProject.remote_asset_urls = preset.remote_asset_urls
       hsProject.variables = preset.variables
     }
+    const newProject = Object.detach(hsProject)
+    this.createOverride(oldProject, newProject)
     const str = `%cRemoved all ${allUnused ? 'unused' : 'deleted'} code (${Math.round(performance.now() - start)}ms)%c\n` +
       `${removedCount.abilities} abilities, ${removedCount.rules} rules, ${removedCount.objects} objects,` +
       ` ${removedCount.eventParameters} event parameters, ${removedCount.customObjects} custom objects, ` +
       `${removedCount.variables} variables`
     console.log(str, this.consoleMainStyle, 'color: #777; background: #0000')
 
-    // Reload Keyboard
-    const abilityContainer = document.querySelector('[data-blocksource="custom-abilities"]')
-    const customRulesContainer = document.querySelector('[data-blocksource="custom-rules"]')
-    loadBlockList(abilityContainer.parentNode, abilityContainer)
-    loadBlockList(customRulesContainer.parentNode, customRulesContainer)
+    this.reloadKeyboard()
   },
   savePreset: function (project, namesDict, doCustomObjs) {
     doCustomObjs = doCustomObjs || false
@@ -397,7 +405,7 @@ const PresetManager = {
     })
     saveBtn.innerText = 'Import'
     saveBtn.addEventListener('click', () => {
-      // Create config from option checkboxe IDs and values
+      // Create config from option checkbox IDs and values
       const config = Object.fromEntries(
         options.map(([id]) => {
           return [id, document.getElementById(id).checked]
@@ -418,6 +426,7 @@ const PresetManager = {
     dialog.showModal()
   },
   loadPreset: function (project, presetArray, options) {
+    const oldProject = Object.detach(project)
     options = options || {}
     presetArray = presetArray || []
     let newestCreateDate = 0
@@ -538,7 +547,42 @@ const PresetManager = {
         presetsMerged++
       }
     })
+    if (project.scenes) {
+      // Can't have duplicate scene names
+      const sceneNames = []
+      project.scenes.forEach(s => {
+        const base = s.name.replace(/\s\d+$/, '')
+        const numberMatch = s.name.match(/\s(\d+)$/)
+        let i = numberMatch ? numberMatch[1] : 1
+        while (sceneNames.includes(s.name)) {
+          i++
+          s.name = `${base} ${i}`
+        }
+        sceneNames.push(s.name)
+      })
+    }
+    const newProject = Object.detach(project)
+    this.createOverride(oldProject, newProject, true)
     return { project: project, mergeCount: presetsMerged }
+  },
+  createOverride: function (oldData, newData, rerender = false) {
+    setTimeout(() => new ProjectRevision({ type: 'AEOverrideProject', oldData, newData, rerender }), 10)
+    if (rerender) this.rerenderProject()
+    this.reloadKeyboard()
+    // Create revision
+  },
+  rerenderProject: function () {
+    blocksContainer.innerHTML = ''
+    infoElement.dataset.project = JSON.stringify(hsProject)
+    // Re-render the entire project because of scenes
+    render()
+  },
+  reloadKeyboard: function () {
+    // Reload Abilities and Custom Rules
+    const abilityContainer = document.querySelector('[data-blocksource="custom-abilities"]')
+    const customRulesContainer = document.querySelector('[data-blocksource="custom-rules"]')
+    loadBlockList(abilityContainer.parentNode, abilityContainer)
+    loadBlockList(customRulesContainer.parentNode, customRulesContainer)
   },
   extensionURL: new URL(document.currentScript.src).origin
 }
