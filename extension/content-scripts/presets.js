@@ -521,7 +521,7 @@ const PresetManager = {
       const expression = new RegExp('"(' + Object.keys(newIdDictionary).join('|') + ')"', 'g')
       preset = JSON.parse(JSON.stringify(preset).replace(expression, function (m0, m1) {
         return JSON.stringify(newIdDictionary[m1])
-      }).replace(/([^\\](\\\\)*"):undefined($|[,}])/g, '$1:""$2')) // MODIFIED REGEX
+      }).replace(/([^\\](\\\\)*"):undefined($|[,}](?!"[,}\]]|"$)(?=["}\]]|$))/g, '$1:""$2')) // MODIFIED REGEX
       if (preset.playerVersion === project.playerVersion || options.alwaysMerge) {
         Object.keys(preset).forEach(key => {
           if (key === 'abilities' && !options.originalCreateDates) {
