@@ -562,14 +562,15 @@ const PresetManager = {
       })
     }
     const newProject = Object.detach(project)
-    this.createOverride(oldProject, newProject, true)
+    this.createOverride(oldProject, newProject)
     return { project: project, mergeCount: presetsMerged }
   },
-  createOverride: function (oldData, newData, rerender = false) {
+  createOverride: function (oldData, newData) {
+    // Rerender only if number of scenes changes
+    const rerender = oldData.scenes.length !== newData.scenes.length
     setTimeout(() => new ProjectRevision({ type: 'AEOverrideProject', oldData, newData, rerender }), 10)
     if (rerender) this.rerenderProject()
     this.reloadKeyboard()
-    // Create revision
   },
   rerenderProject: function () {
     blocksContainer.innerHTML = ''
