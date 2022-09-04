@@ -9,6 +9,7 @@ const TraitEditor = {
       if (!traitValue || typeof traitValue === 'object') return
       label.querySelector('input').value = traitValue
     })
+    if (!project.stageSize) project.stageSize = { width: 1024, height: 768 }
     const stageSizeLabel = document.querySelector('[data-trait-name="stageSize"]')
     stageSizeLabel.children[0].value = project.stageSize.width
     stageSizeLabel.children[1].value = project.stageSize.height
