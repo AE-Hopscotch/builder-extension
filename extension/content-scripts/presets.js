@@ -40,6 +40,7 @@ const PresetManager = {
     }
   },
   printCode: function (root = document) {
+    if (ProjectCursor.current) ProjectCursor.current.destroy()
     root.querySelectorAll('#blocks-container > div:not(.collapsible-container) > .block > .openbtn').forEach(s => expandBlock({ target: s }))
     const selector = '.collapsible > div:not(.collapsible-container, .disabled) > .block .openbtn:not(.print-keep-closed)'
     let buttons = root.querySelectorAll(selector)

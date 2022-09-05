@@ -165,10 +165,18 @@ body._AE_dark-mode {
   > *:not(button) { color: var(--col-text); }
 }
 
+$dialog-cutoff-large: 640px;
+$dialog-cutoff-small: 480px;
+dialog:not(.block-json-editor) {
+  max-width: 80%;
+  max-height: calc(80% - 64px);
+}
+
 dialog.save-preset-dialog {
   display: flex;
   user-select: none;
   -webkit-user-select: none;
+  max-width: calc(100% - 64px);
   @include theme-bg;
   > div {
     margin: 8px 24px;
@@ -184,6 +192,9 @@ dialog.save-preset-dialog {
       font-size: 18px;
       margin-bottom: 4px;
     }
+  }
+  @media (max-width: $dialog-cutoff-large) {
+    flex-direction: column;
   }
 }
 
@@ -208,6 +219,7 @@ dialog.load-preset-dialog {
     text-overflow: ellipsis;
     display: block;
     margin: 16px auto 8px;
+    max-width: 100%;
   }
   button[disabled] {
     cursor: not-allowed;
@@ -254,7 +266,6 @@ dialog.gradient-bg {
     justify-content: center;
     align-items: center;
     position: relative;
-    padding: 16px 20px 24px;
     background: linear-gradient(to bottom, var(--col-g1), var(--col-g3));
     border-radius: 8px;
     &[type="radial"] {
@@ -323,5 +334,24 @@ dialog.gradient-bg {
       background-color: white;
       margin: 0;
     }
+  }
+
+  @media (max-width: $dialog-cutoff-small) {
+    p { font-size: 16px; }
+    .small-block { display: block; }
+    label {
+      font-size: 14px;
+      margin-top: 4px;
+      display: inline-flex;
+      align-items: center;
+      input[type="radio"] { margin-block: 0; }
+    }
+    #gradient-preview {
+      width: calc(100% - 180px);
+      p { font-size: 14px; }
+      input { width: 80px; padding: 8px 4px; }
+    }
+    #color-preview-box { width: 176px; }
+    #color-preview-box input { width: 80px; }
   }
 }

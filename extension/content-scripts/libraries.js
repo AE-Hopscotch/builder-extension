@@ -56,7 +56,7 @@ const ImportedLibraries = {
 
     // Type Selector
     const modeHeader = document.createElement('p')
-    modeHeader.innerText = 'HS Color Mode:'
+    modeHeader.innerHTML = '<span class="small-block">HS Color Mode:</span>'
     modeHeader.innerHTML += '<label><input type="radio" name="_AE_bg-mode" value="rgb" checked=""><span>RGB (Blend)</span></label>' +
       '<label><input type="radio" name="_AE_bg-mode" value="hsb"><span>HSB (Shift)</span></label>'
     modeHeader.addEventListener('input', e => {
