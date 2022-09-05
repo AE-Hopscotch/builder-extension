@@ -54,8 +54,9 @@
 .CodeMirror-lint-marker-error{top:3px!important;left:-4px!important}
 dialog.block-json-editor{background-color:black;}
 dialog.block-json-editor{width:80%;height:75%;}
-dialog::backdrop{backdrop-filter:blur(2px);background-color:#ddda;}
+dialog::backdrop{backdrop-filter:blur(4px);background-color:#ddda;}
 @media (prefers-color-scheme: dark) { dialog::backdrop{background-color:#444a;} }
+._AE_dark-mode dialog::backdrop{background-color:#444a;}
 dialog button{position:fixed;top:0;right:96px;padding:8px 14px;margin:16px;font-family:inherit;font-size:18px;min-width:80px;border-radius:4px;}
 dialog button.accent{right:0;background-color:#11e4c8;color:white;}
 dialog .block-preview{position:fixed;top:0.625%;left:0;width:100%;text-align:center;}

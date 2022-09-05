@@ -16,11 +16,12 @@ module.exports = function (isFF) {
         '/content-scripts/codemirror.css',
         '/lib/codemirror.min.js',
         '/lib/jszip.min.js',
+        '/lib/jscolor.js',
         '/lib/block-text.js',
         '/content-scripts/traits.js',
         '/content-scripts/enhancements.js',
         '/content-scripts/presets.js',
-        '/content-scripts/preset-worker.js',
+        '/content-scripts/libraries.js',
         '/images/wrench.svg'
       ],
       matches: ['https://explore.gethopscotch.com/*']

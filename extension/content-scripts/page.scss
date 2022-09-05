@@ -134,11 +134,16 @@ body._AE_dark-mode {
   }
 }
 
+@mixin theme-bg {
+  background-color: var(--col-bg-main);
+  > *:not(button) { color: var(--col-text); }
+}
+
 dialog.save-preset-dialog {
   display: flex;
   user-select: none;
   -webkit-user-select: none;
-  background-color: var(--col-bg-main);
+  @include theme-bg;
   > div {
     margin: 8px 24px;
     display: flex;
@@ -159,8 +164,7 @@ dialog.save-preset-dialog {
 dialog.load-preset-dialog {
   user-select: none;
   -webkit-user-select: none;
-  background-color: var(--col-bg-main);
-  > *:not(button) { color: var(--col-text); }
+  @include theme-bg;
   h2 {
     max-width: 440px;
     text-align: center;
@@ -183,5 +187,115 @@ dialog.load-preset-dialog {
     cursor: not-allowed;
     color: #fff8;
     opacity: 0.9;
+  }
+}
+
+dialog.gradient-bg {
+  @include theme-bg;
+  * { box-sizing: border-box; }
+  h2 {
+    max-width: 440px;
+    text-align: center;
+    margin-top: 8px;
+  }
+  p {
+    font-size: 18px;
+    margin-block: 0.4em;
+  }
+  table {
+    margin: auto;
+  }
+  input:not([type="checkbox"], [type="radio"]) {
+    padding: 8px;
+    font-size: 18px;
+    width: 384px;
+    max-width: 100%;
+    margin: 4px 0;
+    border-radius: 4px;
+    border: 1px solid #666;
+  }
+  .color-preview {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    height: 90px;
+  }
+  
+  #gradient-preview {
+    width: 180px;
+    height: 90px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    padding: 16px 20px 24px;
+    background: linear-gradient(to bottom, var(--col-g1), var(--col-g3));
+    border-radius: 8px;
+    &[type="radial"] {
+      background: radial-gradient(var(--col-g1) 0%, var(--col-g2) 85%);
+      background-size: 196px 196px;
+      background-position: center;
+    }
+    &[type="horizontal"] {
+      background: linear-gradient(to right, var(--col-g1), var(--col-g2));
+    }
+    &[type="vertical"] {
+      background: linear-gradient(to bottom, var(--col-g1), var(--col-g2));
+    }
+    &[type="nesw"] {
+      background: linear-gradient(45deg, var(--col-g1), var(--col-g2));
+    }
+    &[type="nwse"] {
+      background: linear-gradient(135deg, var(--col-g1), var(--col-g2));
+    }
+    &[type="quad"]::after {
+      content: " ";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: inherit;
+      height: inherit;
+        background: linear-gradient(to bottom, var(--col-g2), var(--col-g4));
+        mask-image: linear-gradient(to left, white, transparent);
+        -webkit-mask-image: linear-gradient(to left, white, transparent);
+      border-radius: 8px;
+    }
+    p {
+      z-index: 1;
+      position: relative;
+      margin: 0;
+      top: -2px;
+      user-select: none;
+      -webkit-user-select: none;
+      opacity: 1;
+      transition: opacity 0.3s ease-out;
+      color: white;
+    }
+    &.rgb p {
+      opacity: 0;
+    }
+  }
+  #color-preview-box {
+    width: 196px;
+    height: 90px;
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  #color-preview-box input {
+    box-sizing: border-box;
+    width: 90px;
+    font-size: 16px;
+    margin: 4px;
+    text-align: center;
+    border-radius: 4px;
+    border: 1px solid #666;
+    outline: none;
+  }
+  .jscolor-picker {
+    :nth-last-child(2), input {
+      background-color: white;
+      margin: 0;
+    }
   }
 }
