@@ -304,26 +304,26 @@ const PresetManager = {
     return presetProject
   },
   presetArray: [],
+  readFile: function (method, file) {
+    const reader = new FileReader()
+    return new Promise((resolve, reject) => {
+      reader.onload = event => resolve(event.target.result)
+      reader.onerror = error => reject(error)
+      switch (method) {
+        case 'text':
+          reader.readAsText(file)
+          break
+        case 'dataURL':
+          reader.readAsDataURL(file)
+          break
+        default:
+          throw new TypeError('Unsupported Read Method')
+      }
+    })
+  },
   presetFileChangeListener: async function () {
     let invalidPresetCount = 0
     const presetArray = []
-    function readFile (method, file) {
-      const reader = new FileReader()
-      return new Promise((resolve, reject) => {
-        reader.onload = event => resolve(event.target.result)
-        reader.onerror = error => reject(error)
-        switch (method) {
-          case 'text':
-            reader.readAsText(file)
-            break
-          case 'dataURL':
-            reader.readAsDataURL(file)
-            break
-          default:
-            throw new TypeError('Unsupported Read Method')
-        }
-      })
-    }
     function contentHandler (content, filename, ext) {
       if (!/^\.(hspre|txt|json|hopscotch)$/.test(ext)) return invalidPresetCount++
       // These are the individual preset files
@@ -352,7 +352,7 @@ const PresetManager = {
               })
             })
           }, function (e) {
-            readFile('text', file).then(content => {
+            PresetManager.readFile('text', file).then(content => {
               contentHandler(content, name.replace(/\..*?$/, ''), name.match(/\..*?$/)[0])
               resolve()
             })

@@ -164,6 +164,28 @@ body._AE_dark-mode {
   background-color: var(--col-bg-main);
   > *:not(button) { color: var(--col-text); }
 }
+@mixin centered-header {
+  max-width: 440px;
+  text-align: center;
+  margin-top: 8px;
+}
+@mixin text-input {
+  padding: 8px;
+  font-size: 18px;
+  width: 384px;
+  max-width: 100%;
+  margin: 4px 0;
+  border-radius: 4px;
+  border: 1px solid #666;
+}
+@mixin file-input {
+  width: 365px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+  margin: 16px auto 8px;
+  max-width: 100%;
+}
 
 $dialog-cutoff-large: 640px;
 $dialog-cutoff-small: 480px;
@@ -202,11 +224,7 @@ dialog.load-preset-dialog {
   user-select: none;
   -webkit-user-select: none;
   @include theme-bg;
-  h2 {
-    max-width: 440px;
-    text-align: center;
-    margin-top: 8px;
-  }
+  h2 { @include centered-header; }
   label {
     display: flex;
     align-items: flex-start;
@@ -214,12 +232,7 @@ dialog.load-preset-dialog {
     margin: auto;
   }
   input[type="file"] {
-    width: 365px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: block;
-    margin: 16px auto 8px;
-    max-width: 100%;
+    @include file-input;
   }
   button[disabled] {
     cursor: not-allowed;
@@ -231,11 +244,7 @@ dialog.load-preset-dialog {
 dialog.gradient-bg {
   @include theme-bg;
   * { box-sizing: border-box; }
-  h2 {
-    max-width: 440px;
-    text-align: center;
-    margin-top: 8px;
-  }
+  h2 { @include centered-header; }
   p {
     font-size: 18px;
     margin-block: 0.4em;
@@ -244,13 +253,7 @@ dialog.gradient-bg {
     margin: auto;
   }
   input:not([type="checkbox"], [type="radio"]) {
-    padding: 8px;
-    font-size: 18px;
-    width: 384px;
-    max-width: 100%;
-    margin: 4px 0;
-    border-radius: 4px;
-    border: 1px solid #666;
+    @include text-input;
   }
   .color-preview {
     display: flex;
@@ -354,4 +357,14 @@ dialog.gradient-bg {
     #color-preview-box { width: 176px; }
     #color-preview-box input { width: 80px; }
   }
+}
+
+dialog.midi-hack-popup {
+  @include theme-bg;
+  * { box-sizing: border-box; }
+  h2 { @include centered-header; }
+  input[type="text"] { @include text-input; }
+  input[type="file"] { @include file-input; margin-inline: 0; }
+  p { font-size: 18px; margin-block: 0.4em; }
+  .info { max-width: 400px; text-align: center; }
 }
