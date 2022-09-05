@@ -21,6 +21,29 @@ body._AE_dark-mode {
   .fullscreen.object-canvas-editor > h2 {
     color: white;
   }
+  .blocks-keyboard, .operators-keyboard, ._AE-hs-tools-keyboard {
+    --col-keyboard-bg: #333;
+    --col-keyboard-bg-highlight: #444;
+    --col-keyboard-border: #aaa;
+    @media (prefers-color-scheme: light) {
+      // Invert icons when system theme doesn't change the icons
+      .category-label img:not(
+        [src$=".png"]):not(
+        [src*="objects-custom"]):not(
+        [src*="-characters"]):not(
+        [src*="-jungle"]):not(
+        [src*="-device"]):not(
+        [src*="editor/blocks-"]):not(
+        [src*="operator-device"]):not(
+        [src*="operator-uservar"]):not(
+        [src*="operator-color"]):not(
+        [src*="operator-custom"]),
+      .category-label img[src*="blocks-custom"] {
+        filter: invert(1) brightness(2);
+        -webkit-filter: invert(1) brightness(2);
+      }
+    }
+  }
 }
 
 ._AE-left-btn-container {
@@ -128,7 +151,10 @@ body._AE_dark-mode {
       font-size: 20px;
     }
     div.keyboard-blocks-container {
-      color: inherit;
+      color: var(--col-text);
+      label[data-trait-name="video_url_path"] > input {
+        min-width: 144px;
+      }
       > label, div.row { white-space: nowrap; margin-bottom: 0; }
     }
   }
