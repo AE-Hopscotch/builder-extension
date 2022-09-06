@@ -175,6 +175,46 @@ body._AE_dark-mode {
       outline: initial;
     }
   }
+  #_AE_search-results > .search-result {
+    zoom: 0.8;
+    max-width: 100%;
+    .trace {
+      padding: 0 10px;
+      display: inline-block;
+    }
+  }
+  #_AE_search-results > div.block-wrapper {
+    @mixin opaque {
+      opacity: 1;
+      cursor: inherit;
+      &:hover, &:active { opacity: 1 }
+    }
+    div.block {
+      height: 44px;
+    }
+    div.block.abl {
+      background-color: #f2f2f2;
+    }
+    .param-bubble {
+      height: 36px;
+      border: 2px solid white;
+      width: auto;
+      border-radius: 20px;
+      margin: 0 4px;
+      @include opaque;
+    }
+    .operator {
+      height: 32px;
+      padding: 0 4px;
+      @include opaque;
+      > .param-bubble {
+        display: inline-flex;
+        height: 32px;
+      }
+      &.rcol { width: 48px; }
+    }
+  }
+
   @media (max-width: 780px) {
     padding-top: 0;
     &.open #_ae-kb-option-selector {
