@@ -210,3 +210,11 @@ function canDragOperator (parameterType, operatorType) {
   if (parameterType !== 'HSObject' && operatorType && getAEModPref('allowAllDrags')) return true
   return allowedTypes.includes(operatorType)
 }
+
+DragValidator.validateParameter = function (to, from, item) {
+  const targetGroup = to.el.dataset.type
+  const operatorGroup = item.dataset.type
+  // Redefine validate parameter but with updated can drag function
+  const result = canDragOperator(targetGroup, operatorGroup)
+  return result
+}
