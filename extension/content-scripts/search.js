@@ -80,7 +80,12 @@ const ProjectSearch = {
         const optionsContainer = document.getElementById('_AE_search-options')
         const closeOptionsBtn = optionsContainer.parentNode.querySelector('.openbtn .hs-icon.open')
         if (closeOptionsBtn) closeOptionsBtn.click()
+        const label = modKeyboard.querySelector('.category-label[data-name="Results"]')
+        label.click()
       }, 50)
+      setTimeout(() => {
+        this.recalculateResultsHeight()
+      }, 80)
     })
 
     if ('onsearch' in desktopInput) return
@@ -123,9 +128,14 @@ const ProjectSearch = {
       if (!nodeTree(e.target).find(el => el.matches('.search-result'))) return
       // Has search result as a parent element; update max size
       setTimeout(() => {
-        container.parentNode.style.maxHeight = container.getBoundingClientRect().height + 60 + 'px'
+        ProjectSearch.recalculateResultsHeight()
       }, 80)
     })
+  },
+  recalculateResultsHeight: function () {
+    const container = document.getElementById('_AE_search-results')
+    if (!container.querySelector('.hs-icon.open')) return // Return if closed
+    container.parentNode.style.maxHeight = container.getBoundingClientRect().height + 60 + 'px'
   },
   fullBlockNames: {
     44: ['var', 'Increase variable by', '', 'by'],
@@ -333,7 +343,6 @@ const ProjectSearch = {
                         if (!parent) parent = {}
                         containerID = data.objectID || parent.objectID || parent.id
                       }
-                      console.log(secondarySearch, containerID)
                       enclosingAbilityID = containerID || secondarySearch[0].id?.replace(/_b\d+$/, '') || enclosingAbilityID
                     } else {
                       if (resultElement.querySelector('.trace')) {
@@ -395,7 +404,11 @@ const ProjectSearch = {
                   const expandBtn = collapsedTarget.querySelector('.openbtn')
                   if (expandBtn) expandBlock({ target: expandBtn })
                 })
-                const targetBlock = document.querySelector(`.bl-container :is([data-id*="${res.id}"], [data-id*="${res.data.controlScript?.abilityID}"]) .block`)
+                const blockAbilityID = res.id.replace(/_b\d+$/, '')
+                const blockIndex = parseInt(res.id.replace(/.*_b(\d)$/, '$1')) + 1
+                const targetBlock = document.querySelector(`.bl-container :is([data-id*="${res.id}"],` +
+                  `[data-id*="${res.data.controlScript?.abilityID}"],` +
+                  `[data-ability="${blockAbilityID}"] .block-wrapper:nth-child(${blockIndex})) .block`)
                 if (targetBlock) {
                   const onIos = (!!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform)) ||
                     (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)

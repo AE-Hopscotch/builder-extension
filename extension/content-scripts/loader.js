@@ -128,7 +128,7 @@ function createToolbar () {
       })
       if (!matchingTab) return
       modKeyboard.scrollTo({
-        left: modKeyboard.scrollLeft + matchingTab.getBoundingClientRect().x - 8,
+        left: modKeyboard.scrollLeft + matchingTab.getBoundingClientRect().x - 4,
         behavior: 'smooth'
       })
     })
