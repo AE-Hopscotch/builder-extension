@@ -22,10 +22,13 @@ module.exports = function (isFF) {
         '/content-scripts/enhancements.js',
         '/content-scripts/presets.js',
         '/content-scripts/libraries.js',
+        '/content-scripts/search.js',
         '/images/sliders.svg',
         '/images/wand.svg',
         '/images/templates.svg',
         '/images/books.svg',
+        '/images/gear.svg',
+        '/images/search-list.svg',
         '/images/wrench.svg'
       ],
       matches: ['https://explore.gethopscotch.com/*']

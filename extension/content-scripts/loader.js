@@ -10,13 +10,16 @@ const sections = [
   { id: 'traits-editor', title: 'Project Traits', tab: 'modding', icon: 'sliders', short: 'Properties' },
   { id: 'project-enhancements', title: 'Enhancements', tab: 'modding', icon: 'wand', short: 'Features' },
   { id: 'code-management', title: 'Code Management', tab: 'modding', icon: 'templates', tabName: 'Aggregation' },
-  { id: 'imported-libraries', title: 'Libraries', tab: 'modding', icon: 'books' }
+  { id: 'imported-libraries', title: 'Libraries', tab: 'modding', icon: 'books' },
+  { id: 'search-options', title: 'Options', tab: 'search', icon: 'gear' },
+  { id: 'search-results', title: 'Results', tab: 'search', icon: 'search-list' }
 ]
 
 function generateTabIconHTML (section) {
   const longTitle = section.tabName || section.title
   const shortTitle = section.short || longTitle
-  return `<div class="category-label" data-tab="${section.tab}" data-name="${section.title}">
+  const hideIfNeeded = section.tab !== 'modding' ? ' kb-hide' : ''
+  return `<div class="category-label${hideIfNeeded}" data-tab="${section.tab}" data-name="${section.title}">
     <img src="${api.runtime.getURL('/images/' + section.icon)}.svg" alt="${section.icon}">
     <span class="medium-screen">${longTitle}</span>
     <span class="small-screen">${shortTitle}</span>
@@ -24,7 +27,8 @@ function generateTabIconHTML (section) {
 }
 
 function generateSectionHTML (section) {
-  return `<div class="keyboard-section" data-tab="${section.tab}">
+  const hideIfNeeded = section.tab !== 'modding' ? ' kb-hide' : ''
+  return `<div class="keyboard-section${hideIfNeeded}" data-tab="${section.tab}">
     <div class="keyboard-header">
       <b class="title">${section.title}</b>
       <button class="openbtn"><i class="hs-icon open"></i></button>
@@ -105,6 +109,7 @@ function createToolbar () {
   })
   // Section change listener
   modKeyboard.querySelector('.keyboard-category-selector').addEventListener('input', e => {
+    if (e.target.type === 'search') return
     document.getElementById('_ae-kb-option-selector').value = e.target.value
     modKeyboard.querySelectorAll('.category-label, .keyboard-section').forEach(label => {
       label.classList.toggle('kb-hide', label.dataset.tab !== e.target.value)
@@ -117,7 +122,10 @@ function createToolbar () {
   modKeyboard.querySelectorAll('.category-label').forEach(label => {
     label.addEventListener('click', () => {
       const tabs = modKeyboard.querySelectorAll(`.keyboard-section[data-tab="${label.dataset.tab}"]`)
-      const matchingTab = [...tabs].find(tab => tab.querySelector('.title').textContent === label.dataset.name)
+      const matchingTab = [...tabs].find(tab => {
+        const title = tab.querySelector('.title')
+        return !!title && title.textContent === label.dataset.name
+      })
       if (!matchingTab) return
       modKeyboard.scrollTo({
         left: modKeyboard.scrollLeft + matchingTab.getBoundingClientRect().x - 8,
@@ -154,7 +162,8 @@ window.addEventListener('load', () => {
     '/content-scripts/traits.js',
     '/content-scripts/enhancements.js',
     '/content-scripts/presets.js',
-    '/content-scripts/libraries.js'
+    '/content-scripts/libraries.js',
+    '/content-scripts/search.js'
   ])
   injectStyle([
     '/content-scripts/codemirror.css',
