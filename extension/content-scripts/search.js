@@ -76,6 +76,11 @@ const ProjectSearch = {
     // Search Listener
     modKeyboard.addEventListener('search', (event) => {
       this.search(event.target.value)
+      setTimeout(() => {
+        const optionsContainer = document.getElementById('_AE_search-options')
+        const closeOptionsBtn = optionsContainer.parentNode.querySelector('.openbtn .hs-icon.open')
+        if (closeOptionsBtn) closeOptionsBtn.click()
+      }, 50)
     })
 
     if ('onsearch' in desktopInput) return
@@ -113,17 +118,33 @@ const ProjectSearch = {
   initResults: function () {
     const container = document.getElementById('_AE_search-results')
     container.parentNode.dataset.darken = 'false'
+
+    container.addEventListener('click', e => {
+      if (!nodeTree(e.target).find(el => el.matches('.search-result'))) return
+      // Has search result as a parent element; update max size
+      setTimeout(() => {
+        container.parentNode.style.maxHeight = container.getBoundingClientRect().height + 60 + 'px'
+      }, 80)
+    })
   },
   fullBlockNames: {
     44: ['var', 'Increase variable by', '', 'by'],
     45: ['var', 'Set variable to', '', 'to'],
     57: ['looks', 'Set Width and Height', 'width', 'height']
   },
+  traceIcons: '<i class="hs-icon hs-see-code"></i><i class="hs-icon hs-close"></i>',
   search: function (searchText, options) {
     const searchElements = {
       searchPopup: document.getElementById('search-popup'),
       resultsBox: document.getElementById('_AE_search-results')
     }
+    function addCloseTraceListener (resultElement) {
+      const traceElement = resultElement.querySelector('.trace')
+      resultElement.querySelector('.hs-close').addEventListener('click', () => {
+        traceElement.remove()
+      })
+    }
+
     if (!options) searchElements.resultsBox.innerHTML = ''
     function escapeRegExp (str) {
       return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') // $& means the whole matched string
@@ -268,9 +289,10 @@ const ProjectSearch = {
             if (options) break // exit if automated because we don't want to append to the results box
             // output
             const htmlRes = jsonToHtml(res.data, undefined, true)
-            searchElements.resultsBox.innerHTML += `<div data-id="${res.id}" class="block-wrapper search-result disabled ${className}" data-group="${htmlRes.sortGroup}">${htmlRes.innerHTML}<i class="fa fa-fw fa-external-link"></i></div>`
+            searchElements.resultsBox.innerHTML += `<div data-id="${res.id}" class="block-wrapper search-result disabled ${className}" data-group="${htmlRes.sortGroup}">${htmlRes.innerHTML}</div>`
             setTimeout(() => {
               searchElements.resultsBox.querySelector(`.block-wrapper[data-id="${res.id}"]`).addEventListener('click', function (e) {
+                if (e.target.matches('.hs-close')) return
                 const resultElement = searchElements.resultsBox.querySelector(`.block-wrapper[data-id="${res.id}"]`)
                 if (e.target.classList.contains('disabled')) return
                 console.groupCollapsed('Block Trace Info')
@@ -298,15 +320,29 @@ const ProjectSearch = {
                     })
                     if (secondarySearch.length > 1) {
                       console.warn('More than one ID Reference')
-                      break
-                    } else if (secondarySearch.length === 1) {
-                      enclosingAbilityID = secondarySearch[0].data.objectID || secondarySearch[0].id?.replace(/_b\d+$/, '') || enclosingAbilityID
+                      // break
+                    }
+                    if (secondarySearch.length > 0) {
+                      // Get Object ID of rule if it exists
+                      const data = secondarySearch[0].data
+                      let containerID
+                      if (getDataType(data) === 'rule') {
+                        console.log(data)
+                        let parent = hsProject.objects.find(o => o.rules.includes(data.id))
+                        if (!parent) parent = hsProject.customRules.find(cr => cr.rules.includes(data.id))
+                        if (!parent) parent = {}
+                        containerID = data.objectID || parent.objectID || parent.id
+                      }
+                      console.log(secondarySearch, containerID)
+                      enclosingAbilityID = containerID || secondarySearch[0].id?.replace(/_b\d+$/, '') || enclosingAbilityID
                     } else {
                       if (resultElement.querySelector('.trace')) {
                         resultElement.querySelector('.trace').remove()
                         console.groupEnd()
                       }
-                      resultElement.innerHTML += '<span class="trace">Contained in deleted code</span>'
+                      const icons = ProjectSearch.traceIcons
+                      resultElement.innerHTML += `<div class="trace">Contained in deleted code ${icons}</div>`
+                      addCloseTraceListener(resultElement)
                       return
                     }
                   }
@@ -330,12 +366,20 @@ const ProjectSearch = {
                   console.log(enclosingAbilityID, abilityIdTree)
                   console.log(safetyCounter, blockData)
                 }
-                if (!e.target.classList.contains('fa-external-link')) {
+                if (!e.target.matches('.hs-see-code')) {
                   if (resultElement.querySelector('.trace')) {
                     resultElement.querySelector('.trace').remove()
-                    console.groupEnd()
                   }
-                  if (blockData) resultElement.innerHTML += `<span class="trace">Found in ${blockData.xPosition ? 'object' : (blockData.rules ? 'custom rule' : 'ability')} &ldquo;${blockData.name || blockData.description}&rdquo;`
+                  if (blockData) {
+                    console.log(blockData)
+                    const name = htmlEscape(blockData.name || blockData.description)
+                    const type = blockData.xPosition
+                      ? 'object'
+                      : (blockData.rules ? 'custom rule' : 'ability')
+                    const icons = ProjectSearch.traceIcons
+                    resultElement.innerHTML += `<div class="trace">Found in ${type} &ldquo;${name}&rdquo; ${icons}</div>`
+                    addCloseTraceListener(resultElement)
+                  }
                   console.log('Container Script vs Self', blockData, res)
                   console.groupEnd()
                   return
@@ -343,14 +387,20 @@ const ProjectSearch = {
                 console.log(blockData || res.data)
                 // console.log(res.data.controlScript?.abilityID);
                 resultElement.removeAttribute('data')
-                abilityIdTree.forEach(id => {
+                const id = blockData[getTargetClass(blockData)?.identifier]
+                if (!id) return
+                [id, ...abilityIdTree].forEach(id => {
                   const collapsedTarget = document.querySelector(`.bl-container [data-id*="${id}"]:not(.collapsible-container)`)
-                  if (collapsedTarget) collapsedTarget.querySelector('.openbtn')?.click()
+                  if (!collapsedTarget) return
+                  const expandBtn = collapsedTarget.querySelector('.openbtn')
+                  if (expandBtn) expandBlock({ target: expandBtn })
                 })
-                const targetBlock = document.querySelector(`.bl-container :is([data-id*="${res.id}"], [data-id*="${res.data.controlScript?.abilityID}"]) bl`)
+                const targetBlock = document.querySelector(`.bl-container :is([data-id*="${res.id}"], [data-id*="${res.data.controlScript?.abilityID}"]) .block`)
                 if (targetBlock) {
-                  // targetBlock.classList.add(onIos ? 'focus-ios' : 'focus');
-                  (typeof targetBlock.scrollIntoViewIfNeeded === 'function') ? targetBlock.scrollIntoViewIfNeeded() : targetBlock.scrollIntoView()
+                  const onIos = (!!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform)) ||
+                    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
+                  targetBlock.classList.add(onIos ? 'focus-ios' : 'focus')
+                  typeof targetBlock.scrollIntoViewIfNeeded === 'function' ? targetBlock.scrollIntoViewIfNeeded() : targetBlock.scrollIntoView()
                   setTimeout(function () { targetBlock.classList.remove('focus', 'focus-ios') }, 3000)
                 }
                 console.log(/* "Target to Open", collapsedTarget, */ 'Target Block', targetBlock)
@@ -360,7 +410,7 @@ const ProjectSearch = {
             return htmlRes
           }
           case !!res.type.match(/^var/): // "velocity"
-            searchElements.resultsBox.innerHTML += `<div class="search-result" data-id="${res.id}"><div class="block-wrapper disabled var-container">${doParameter({ datum: res.data })}</div><i class="fa fa-fw fa-external-link"></i></div>`
+            searchElements.resultsBox.innerHTML += `<div class="search-result" data-id="${res.id}"><div class="block-wrapper disabled var-container">${doParameter({ datum: res.data })}</div></div>`
             searchElements.resultsBox.querySelector(`[data-id="${res.id}"] i.fa-external-link`).addEventListener('click', function (e) {
               console.log(res.data)
             })
