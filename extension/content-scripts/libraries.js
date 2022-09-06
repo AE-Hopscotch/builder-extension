@@ -54,6 +54,10 @@ const ImportedLibraries = {
       }).join('')
       modeTable.appendChild(element)
     })
+    modeTable.addEventListener('input', e => {
+      const value = e.target.value
+      colorContainer.querySelectorAll('[type]').forEach(element => element.setAttribute('type', value))
+    })
 
     // Type Selector
     const modeHeader = document.createElement('p')
@@ -116,7 +120,10 @@ const ImportedLibraries = {
     container.appendChild(colorContainer)
 
     const { closeBtn, saveBtn } = AEAddButtons(dialog)
-    closeBtn.addEventListener('click', () => dialog.remove())
+    closeBtn.addEventListener('click', () => {
+      ScrollLocker.unlock()
+      dialog.remove()
+    })
     saveBtn.addEventListener('click', () => this.saveGradient())
 
     dialog.appendChild(container)
@@ -139,7 +146,7 @@ const ImportedLibraries = {
       alwaysMerge: true,
       originalCreateDates: false,
       name: ruleName || 'Gradient BG',
-      bgHsv: dialog.querySelector('[name="_AE_bg-mode"]:checked').value,
+      bgHsv: dialog.querySelector('[name="_AE_bg-mode"]:checked').value === 'hsb',
       colors: [...document.getElementById('color-preview-box').children]
         .map(input => input.value)
     }
@@ -149,6 +156,7 @@ const ImportedLibraries = {
       `(${Math.round(performance.now() * 100 - start) / 100}ms)`
     console.log(str, PresetManager.consoleMainStyle)
 
+    ScrollLocker.unlock()
     dialog.remove()
   },
   openMIDIHackPopup: function () {

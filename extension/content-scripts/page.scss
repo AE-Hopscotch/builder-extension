@@ -392,16 +392,19 @@ dialog.gradient-bg {
     display: inline-flex;
     flex-wrap: wrap;
     align-items: center;
-  }
-  #color-preview-box input {
-    box-sizing: border-box;
-    width: 90px;
-    font-size: 16px;
-    margin: 4px;
-    text-align: center;
-    border-radius: 4px;
-    border: 1px solid #666;
-    outline: none;
+    input {
+      box-sizing: border-box;
+      width: 90px;
+      font-size: 16px;
+      margin: 4px;
+      text-align: center;
+      border-radius: 4px;
+      border: 1px solid #666;
+      outline: none;
+    }
+    &:not([type="quad"]) input:nth-child(n+3) {
+      display: none;
+    }
   }
   .jscolor-picker {
     :nth-last-child(2), input {
