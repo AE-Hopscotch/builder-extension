@@ -61,6 +61,11 @@ body._AE_dark-mode {
   padding-top: 46px;
   .keyboard-category-selector {
     display: flex;
+    .medium-screen { display: none }
+    @media (min-width: 460px) {
+      .medium-screen { display: inline }
+      .small-screen { display: none }
+    }
   }
   .category-label > p.icon {
     margin: 0;
@@ -363,7 +368,7 @@ dialog.midi-hack-popup {
   @include theme-bg;
   * { box-sizing: border-box; }
   h2 { @include centered-header; }
-  input[type="text"] { @include text-input; }
+  input[type="text"] { @include text-input; width: 100%; }
   input[type="file"] { @include file-input; margin-inline: 0; }
   p { font-size: 18px; margin-block: 0.4em; }
   .info { max-width: 400px; text-align: center; }

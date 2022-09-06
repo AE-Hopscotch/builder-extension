@@ -7,11 +7,21 @@ if (typeof browser !== 'undefined') {
 }
 
 const sections = [
-  { id: 'traits-editor', title: 'Project Traits', tab: 'modding' },
-  { id: 'project-enhancements', title: 'Enhancements', tab: 'modding' },
-  { id: 'code-management', title: 'Code Management', tab: 'modding' },
-  { id: 'imported-libraries', title: 'Libraries', tab: 'modding' }
+  { id: 'traits-editor', title: 'Project Traits', tab: 'modding', icon: 'sliders', short: 'Properties' },
+  { id: 'project-enhancements', title: 'Enhancements', tab: 'modding', icon: 'wand', short: 'Features' },
+  { id: 'code-management', title: 'Code Management', tab: 'modding', icon: 'templates', tabName: 'Aggregation' },
+  { id: 'imported-libraries', title: 'Libraries', tab: 'modding', icon: 'books' }
 ]
+
+function generateTabIconHTML (section) {
+  const longTitle = section.tabName || section.title
+  const shortTitle = section.short || longTitle
+  return `<div class="category-label" data-tab="${section.tab}" data-name="${section.title}">
+    <img src="${api.runtime.getURL('/images/' + section.icon)}.svg" alt="${section.icon}">
+    <span class="medium-screen">${longTitle}</span>
+    <span class="small-screen">${shortTitle}</span>
+  </div>`
+}
 
 function generateSectionHTML (section) {
   return `<div class="keyboard-section" data-tab="${section.tab}">
@@ -21,6 +31,27 @@ function generateSectionHTML (section) {
     </div>
     <div id="_AE_${section.id}" class="keyboard-blocks-container" data-blocklist="[]"></div>
   </div>`
+}
+
+function highlightFocused (keyboard) {
+  const visibleTitles = keyboard.querySelectorAll('.keyboard-section:not(.kb-hide) .title')
+  const elementData = [...visibleTitles].map(title => {
+    return { title, position: title.getBoundingClientRect().x }
+  })
+  const scrolledPast = elementData.filter(el => el.position < 60)
+  const lastScrolledPast = scrolledPast.reverse()[0] || elementData[0]
+
+  // If there's nothing to highlight
+  if (!lastScrolledPast) return
+
+  // Get Keyboard button from last scrolled title element
+  const titleGroup = lastScrolledPast.title.parentNode.parentNode.dataset.tab
+  const visibleButtonsQuery = `.category-label[data-tab="${titleGroup}"]`
+  const buttonList = [...keyboard.querySelectorAll(visibleButtonsQuery)]
+  buttonList.forEach(btn => {
+    const isMatch = btn.dataset.name === lastScrolledPast.title.textContent
+    btn.classList.toggle('kb-selected', isMatch)
+  })
 }
 
 function createToolbar () {
@@ -63,6 +94,7 @@ function createToolbar () {
         <span>Project Search</span>
       </div>
     </label>
+    ${sections.map(s => generateTabIconHTML(s)).join('')}
   </div><div class="keyboard-blocks-wrapper">${
     sections.map(s => generateSectionHTML(s)).join('')
   }</div>`
@@ -71,10 +103,26 @@ function createToolbar () {
   wrenchBtn.addEventListener('click', () => {
     modKeyboard.classList.toggle('open')
   })
+  // Section change listener
   modKeyboard.querySelector('.keyboard-category-selector').addEventListener('input', e => {
     document.getElementById('_ae-kb-option-selector').value = e.target.value
     modKeyboard.querySelectorAll('.category-label, .keyboard-section').forEach(label => {
       label.classList.toggle('kb-hide', label.dataset.tab !== e.target.value)
+    })
+  })
+  // Scroll highlight listener
+  modKeyboard.addEventListener('scroll', () => highlightFocused(modKeyboard), { passive: true })
+  highlightFocused(modKeyboard)
+  // Tab click listener
+  modKeyboard.querySelectorAll('.category-label').forEach(label => {
+    label.addEventListener('click', () => {
+      const tabs = modKeyboard.querySelectorAll(`.keyboard-section[data-tab="${label.dataset.tab}"]`)
+      const matchingTab = [...tabs].find(tab => tab.querySelector('.title').textContent === label.dataset.name)
+      if (!matchingTab) return
+      modKeyboard.scrollTo({
+        left: modKeyboard.scrollLeft + matchingTab.getBoundingClientRect().x - 8,
+        behavior: 'smooth'
+      })
     })
   })
 }
