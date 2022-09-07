@@ -27,7 +27,7 @@ document.body.addEventListener('contextmenu', e => {
   }
 
   const block = nodeTree(e.target).find(x => x.matches('.block-wrapper'))
-  if (!block) return
+  if (!block || !blocksContainer.contains(e.target)) return
   e.preventDefault()
   const dialog = document.createElement('dialog')
   dialog.classList.add('fullscreen', 'block-json-editor')

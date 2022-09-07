@@ -170,12 +170,3 @@ window.addEventListener('load', () => {
     '/content-scripts/page.css'
   ])
 })
-
-document.body.addEventListener('_AE_start-worker', e => {
-  api.runtime.sendMessage({
-    type: 'run-preset-import',
-    arguments: e.detail.arguments
-  }, response => {
-    console.log(response)
-  })
-})
