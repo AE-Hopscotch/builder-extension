@@ -113,7 +113,8 @@ const ProjectEnhancer = {
       { id: 'setDarkMode', name: 'Force Dark Theme', input: 'checkbox', checked: getAEModPref('useDarkMode') },
       { id: 'restrictOperators', name: 'Restrict Operator Drags', input: 'checkbox' },
       { id: 'confirmUnsavedExit', name: 'Confirm Unsaved Exit', input: 'checkbox', checked: getAEModPref('confirmUnsavedExit') },
-      { id: 'kbSaveKey', name: `Save with ${ctrl} + S`, input: 'checkbox', checked: getAEModPref('kbSaveKey') }
+      { id: 'kbSaveKey', name: `Save with ${ctrl} + S`, input: 'checkbox', checked: getAEModPref('kbSaveKey') },
+      { id: 'hoverPeekParams', name: 'Hover to See Strings', input: 'checkbox', checked: getAEModPref('hoverPeekParams') }
     ]
     const html = actions.map(a => {
       const buttonIfNeeded = a.button ? `<button id="_AE_${a.id}_btn">${a.button}</button>` : ''
@@ -177,6 +178,11 @@ const ProjectEnhancer = {
         case '_AE_kbSaveKey_input': {
           return setAEModPref('kbSaveKey', e.target.checked)
         }
+        case '_AE_hoverPeekParams_input': {
+          const action = e.target.checked ? 'addEventListener' : 'removeEventListener'
+          document.body[action]('mouseenter', this.updateParameterPreview, { capture: true })
+          return setAEModPref('hoverPeekParams', e.target.checked)
+        }
       }
     })
 
@@ -198,6 +204,10 @@ const ProjectEnhancer = {
       }
       ProjectEnhancer.saveProject()
     })
+
+    if (getAEModPref('hoverPeekParams')) {
+      document.body.addEventListener('mouseenter', this.updateParameterPreview, { capture: true })
+    }
   },
   prefill: function () {
     this.container.querySelectorAll('button').forEach(button => {
@@ -517,6 +527,19 @@ const ProjectEnhancer = {
       ProjectEnhancer.lastSaved = ProjectRevision.current.id
       ProjectEnhancer.setStatus('Project Saved!', 2500)
     })
+  },
+  lastParamValue: '',
+  changeParamPreviewText: function (text) {
+    if (text === this.lastParamValue) return
+    ProjectEnhancer.setStatus(text)
+    this.lastParamValue = text
+  },
+  updateParameterPreview: function () {
+    const hoverParam = document.querySelector('.param-bubble:hover:not(.selected) > span')
+    if (!hoverParam) return ProjectEnhancer.changeParamPreviewText('')
+    const data = BlockParameter.get(hoverParam.parentNode)?.json
+    if (!data || data.variable || data.datum || !isNaN(Number(data.value))) return ProjectEnhancer.changeParamPreviewText('')
+    ProjectEnhancer.changeParamPreviewText(data.value || '')
   }
 }
 
