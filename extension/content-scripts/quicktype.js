@@ -103,7 +103,8 @@ const QuickType = {
     if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
       return QuickType.changeSelection(container, event.key === 'ArrowUp')
     }
-    if (event.key !== 'Escape') return container.querySelector('label.selected input').focus()
+    const selected = container.querySelector('label.selected input')
+    if (event.key !== 'Escape' && selected) return selected.focus()
     QuickType.destroy(container, ProjectCursor.current, false)
   },
   changeSelection: function (container, previous = false) {
