@@ -3,9 +3,12 @@ module.exports = function (isFF) {
     name: 'Spider HS',
     description: 'Take the power of Hopscotch Project Builder with you into the Web Explorer!',
     version: '0.1',
+    host_permissions: [
+      'https://c.gethopscotch.com/p/*',
+      'https://explore.gethopscotch.com/edit/*',
+      'https://explore.gethopscotch.com/create'
+    ],
     permissions: [
-      'activeTab',
-      'tabs',
       'scripting',
       'storage'
     ],
@@ -39,7 +42,6 @@ module.exports = function (isFF) {
       {
         matches: ['https://explore.gethopscotch.com/edit/*', 'https://explore.gethopscotch.com/create'],
         js: ['/content-scripts/loader.js'],
-        popup: '/popup/index.html',
         all_frames: true
       }
     ],
@@ -53,6 +55,9 @@ module.exports = function (isFF) {
   }
   if (isFF) {
     manifest.browser_specific_settings = { gecko: { id: '{56354600-651e-6aa2-0c85-f893565de3f9}' } }
+    manifest.permissions.push(...manifest.host_permissions)
+    delete manifest.host_permissions
+    manifest.web_accessible_resources = manifest.web_accessible_resources.flatMap(r => r.resources)
   } else {
     // manifest.permissions.push('tabGroups')
   }

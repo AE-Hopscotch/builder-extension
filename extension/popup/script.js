@@ -12,7 +12,7 @@ function copyText (txt) {
 
 chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
   const uuid = tabs[0].url.replace(/.*\//, '')
-  fetch('https://api.allorigins.win/raw?url=https://community.gethopscotch.com/api/v1/projects/' + uuid)
+  fetch('https://corsproxy.io/?url=https://community.gethopscotch.com/api/v1/projects/' + uuid)
     .then(x => x.json()).then(p => {
       const r = Math.round(JSON.stringify(p).length / 10) / 100
       const resultText = 'Hopscotch Web Explorer Info, v1.0.0r1' +

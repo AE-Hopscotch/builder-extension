@@ -152,7 +152,8 @@ function injectStyle (list) {
     document.head.appendChild(link)
   })
 }
-window.addEventListener('load', () => {
+
+function loadAddonContent () {
   if (document.querySelector('.viewonly-message')) return
   injectScript([
     '/lib/codemirror.min.js',
@@ -170,4 +171,10 @@ window.addEventListener('load', () => {
     '/content-scripts/codemirror.css',
     '/content-scripts/page.css'
   ])
-})
+}
+
+if (document.readyState === 'complete') {
+  loadAddonContent()
+} else {
+  window.addEventListener('load', loadAddonContent)
+}
