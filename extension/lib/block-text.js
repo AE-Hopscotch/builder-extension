@@ -133,7 +133,9 @@ if (blocksWrapper && typeof nodeTree !== 'undefined') {
 function getAEModPref (name) {
   let prefs = {
     allowAllDrags: true,
-    useDarkMode: false
+    useDarkMode: false,
+    confirmUnsavedExit: false,
+    kbSaveKey: false
   }
   try {
     prefs = JSON.parse(localStorage._AE_modPreferences)

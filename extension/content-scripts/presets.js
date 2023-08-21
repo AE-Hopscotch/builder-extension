@@ -347,13 +347,13 @@ const PresetManager = {
           .then(function (zip) {
             zip.forEach(function (relativePath, zipEntry) {
               zipEntry.async('string').then(function (fileData) {
-                contentHandler(fileData, zipEntry.name.replace(/\..*?$/, ''), zipEntry.name.match(/\..*?$/)[0])
+                contentHandler(fileData, zipEntry.name.replace(/\.[^.]*?$/, ''), zipEntry.name.match(/\.[^.]*?$/)[0])
                 resolve()
               })
             })
           }, function (e) {
             PresetManager.readFile('text', file).then(content => {
-              contentHandler(content, name.replace(/\..*?$/, ''), name.match(/\..*?$/)[0])
+              contentHandler(content, name.replace(/\.[^.]*?$/, ''), name.match(/\.[^.]*?$/)[0])
               resolve()
             })
           })

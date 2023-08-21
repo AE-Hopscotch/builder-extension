@@ -96,7 +96,14 @@ const checkAbility = {
 
 const ProjectEnhancer = {
   container: null,
+  lastSaved: ProjectRevision.current.id,
+  statusElement: null,
+  setStatus: (msg, time) => {
+    ProjectEnhancer.statusElement.innerText = msg
+    if (time) setTimeout(() => ProjectEnhancer.setStatus(''), time)
+  },
   init: function () {
+    const ctrl = /Mac/.test(navigator.userAgent) ? 'Cmd' : 'Ctrl'
     const container = this.container = document.getElementById('_AE_project-enhancements')
     const actions = [
       { id: 'addSecretBlocks', name: 'Secret Blocks', button: 'Add' },
@@ -104,7 +111,9 @@ const ProjectEnhancer = {
       { id: 'optimizeColorSlots', name: 'Color Slots', button: 'Optimize' },
       { id: 'evaluateMath', name: 'Math Operators', button: 'Evaluate' },
       { id: 'setDarkMode', name: 'Force Dark Theme', input: 'checkbox', checked: getAEModPref('useDarkMode') },
-      { id: 'restrictOperators', name: 'Restrict Operator Drags', input: 'checkbox' }
+      { id: 'restrictOperators', name: 'Restrict Operator Drags', input: 'checkbox' },
+      { id: 'confirmUnsavedExit', name: 'Confirm Unsaved Exit', input: 'checkbox', checked: getAEModPref('confirmUnsavedExit') },
+      { id: 'kbSaveKey', name: `Save with ${ctrl} + S`, input: 'checkbox', checked: getAEModPref('kbSaveKey') }
     ]
     const html = actions.map(a => {
       const buttonIfNeeded = a.button ? `<button id="_AE_${a.id}_btn">${a.button}</button>` : ''
@@ -162,7 +171,32 @@ const ProjectEnhancer = {
           setAEModPref('useDarkMode', e.target.checked)
           return AEShowDarkMode()
         }
+        case '_AE_confirmUnsavedExit_input': {
+          return setAEModPref('confirmUnsavedExit', e.target.checked)
+        }
+        case '_AE_kbSaveKey_input': {
+          return setAEModPref('kbSaveKey', e.target.checked)
+        }
       }
+    })
+
+    // Show confirmation before leaving if there is revision and the setting is true
+    window.onbeforeunload = () => {
+      const requireConfirm = getAEModPref('confirmUnsavedExit')
+      if (!requireConfirm) return
+      return ProjectRevision.current.id === this.lastSaved && null
+    }
+
+    this.statusElement = document.body.appendChild(document.createElement('pre'))
+    this.statusElement.classList.add('_AE_builder-status')
+    document.body.addEventListener('keydown', event => {
+      const ctrlKey = /Mac/.test(navigator.userAgent) ? event.metaKey : event.ctrlKey
+      if (event.key !== 's' || !ctrlKey || !getAEModPref('kbSaveKey')) return
+      event.preventDefault()
+      if (ProjectEnhancer.lastSaved === ProjectRevision.current.id) {
+        return ProjectEnhancer.setStatus('Nothing to save!', 2500)
+      }
+      ProjectEnhancer.saveProject()
     })
   },
   prefill: function () {
@@ -471,6 +505,18 @@ const ProjectEnhancer = {
       return r
     })
     return { changedBlocks, count }
+  },
+  saveProject: function () {
+    const project = EmbeddedPlayer.modifiedProject || EmbeddedPlayer.originalProject
+    // Don't do anything for published projects
+    if (project.published_at) return ProjectEnhancer.setStatus('Saving is only for drafts', 5000)
+    ProjectEnhancer.setStatus('Saving project...')
+
+    EmbeddedPlayer.projectId = EmbeddedPlayer.projectId || project.uuid
+    ProjectUploader.projectRequest(project, {}, () => {
+      ProjectEnhancer.lastSaved = ProjectRevision.current.id
+      ProjectEnhancer.setStatus('Project Saved!', 2500)
+    })
   }
 }
 

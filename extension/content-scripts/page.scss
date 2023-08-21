@@ -310,6 +310,18 @@ body._AE_dark-mode {
     }
   }
 }
+._AE_builder-status {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  background: #777;
+  color: white;
+  margin: 8px;
+  z-index: 100;
+  padding: 6px;
+  opacity: 0.9;
+  &:empty { display: none; }
+}
 
 @mixin theme-bg {
   background-color: var(--col-bg-main);
