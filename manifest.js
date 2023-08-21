@@ -23,6 +23,7 @@ module.exports = function (isFF) {
         '/content-scripts/presets.js',
         '/content-scripts/libraries.js',
         '/content-scripts/search.js',
+        '/content-scripts/quicktype.js',
         '/images/sliders.svg',
         '/images/wand.svg',
         '/images/templates.svg',
@@ -36,7 +37,7 @@ module.exports = function (isFF) {
     background: isFF ? { scripts: ['background.js'] } : { service_worker: 'background.js' },
     content_scripts: [
       {
-        matches: ['https://explore.gethopscotch.com/edit/*'],
+        matches: ['https://explore.gethopscotch.com/edit/*', 'https://explore.gethopscotch.com/create'],
         js: ['/content-scripts/loader.js'],
         popup: '/popup/index.html',
         all_frames: true

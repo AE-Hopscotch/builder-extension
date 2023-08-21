@@ -1,5 +1,15 @@
 $hopscotch-main: #19d8bf;
 
+body._AE_dark-mode, html:has(body._AE_dark-mode) {
+  --col-bg-main: black;
+  --col-bg-translucent: #444c;
+  --col-text: #ccc;
+  --time-trans: 0s;
+  --col-close-opt-popup: #111e;
+  --col-bg-toolbar-translucent: #2a2a2aee;
+  --editor-bg: url("/images/editor_dark.jpeg");
+}
+
 body._AE_dark-mode {
   --col-bg-main: black;
   --col-bg-translucent: #444c;
@@ -303,7 +313,7 @@ body._AE_dark-mode {
 
 @mixin theme-bg {
   background-color: var(--col-bg-main);
-  > *:not(button) { color: var(--col-text); }
+  > *:not(button, input) { color: var(--col-text); }
 }
 @mixin centered-header {
   max-width: 440px;
@@ -532,5 +542,35 @@ dialog.midi-hack-popup {
     0%{filter:contrast(1) brightness(1); -webkit-filter:contrast(1) brightness(1);}
     10%{filter:contrast(2) brightness(1.15); -webkit-filter:contrast(2) brightness(1.15);}
     100%{filter:contrast(1) brightness(1); -webkit-filter:contrast(1) brightness(1);}
+  }
+}
+
+// QuickType
+._AE_quicktype-container {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  > input[placeholder] {
+    padding: 6px 10px;
+    font-size: 16px;
+  }
+  > div {
+    background-color: #666;
+    color: white; //var(--col-text);
+    width: fit-content;
+    padding: 4px 0;
+  }
+  label {
+    display: block;
+    padding: 4px 10px;
+    cursor: pointer;
+    &:hover { color: #12edd0; }
+    &:active { color: #12edd0cc; }
+    &.selected { background-color: #08f; }
+  }
+  input[type="radio"] {
+    appearance: none;
+    -webkit-appearance: none;
+    margin: 0;
   }
 }

@@ -163,7 +163,8 @@ window.addEventListener('load', () => {
     '/content-scripts/enhancements.js',
     '/content-scripts/presets.js',
     '/content-scripts/libraries.js',
-    '/content-scripts/search.js'
+    '/content-scripts/search.js',
+    '/content-scripts/quicktype.js'
   ])
   injectStyle([
     '/content-scripts/codemirror.css',
