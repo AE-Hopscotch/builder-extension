@@ -7,11 +7,11 @@
     "build:manifest": "node index.js",
     "build:static": "copyfiles -u 1 './extension/**/*' -e './extension/**/*.scss' ./build/chrome; copyfiles -u 1 './extension/**/*' -e './extension/**/*.scss' ./build/firefox;",
     "build:scss": "sass extension:build/chrome build/chrome:build/firefox",
-    "build": "npm-run-all --parallel build:*",
+    "build": "mkdir -p build/chrome build/firefox; npm-run-all --parallel build:*",
     "watch:manifest": "onchange 'manifest.js' -- npm run build:manifest",
     "watch:static": "onchange 'extension/**/*' -- npm run build:static",
     "watch:scss": "sass --watch extension:build/chrome build/chrome:build/firefox",
-    "dev": "npm-run-all --parallel build:*; npm-run-all --parallel watch:*",
+    "dev": "npm run build; npm-run-all --parallel watch:*",
     "test": "jest"
   },
   "repository": {
