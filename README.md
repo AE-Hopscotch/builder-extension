@@ -19,7 +19,20 @@ You should get a message that says "Extension Loaded"
 
 ## Loading the Extension (Firefox)
 
-(this will be written once compatibility with Firefox is tested)
+> **Disclaimer:** Loading Unsigned Extensions Requires Firefox Developer Edition
+
+1. Download the latest `spider-firefox.xpi` from the Releases Tab
+2. Go to `about:config` in Firefox Developer Edition and search for `xpinstall.signatures.required`.
+3. Set the boolean value to `false`, such that it looks like this afterwards
+![XPI Signatures Required set to false](assets/signatures-config.png)
+4. Go to `about:addons` in Firefox Developer Edition
+5. Click the "Install Add-on From File..."
+![Install from File button](assets/addon-install.png)
+6. Select the xpi file that you just downloaded
+7. Confirm that you would like to add the extension
+
+You should get a message that says "Spider HS was added"
+
 
 ## Running Development
 
