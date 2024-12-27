@@ -136,6 +136,15 @@ function createToolbar () {
 }
 createToolbar()
 
+function applyPatches () {
+  const undoRedoControls = document.querySelector('.editor-controls-container')
+  undoRedoControls?.addEventListener('click', () => {
+    if (!/Firefox\/\d+/.test(navigator.userAgent)) return
+    const ta = document.querySelector('.revision-state-info')
+    ta.focus()
+  }, { capture: true })
+}
+
 function injectScript (list) {
   list.forEach(filename => {
     const src = api.runtime.getURL(filename)
@@ -171,6 +180,7 @@ function loadAddonContent () {
     '/content-scripts/codemirror.css',
     '/content-scripts/page.css'
   ])
+  applyPatches()
 }
 
 if (document.readyState === 'complete') {

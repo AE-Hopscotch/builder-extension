@@ -177,6 +177,7 @@ document.body.addEventListener('keydown', e => {
 })
 document.body.addEventListener('keydown', e => {
   if (!['ArrowUp', 'ArrowDown'].includes(e.key) || e.metaKey || e.altKey || e.shiftKey || e.ctrlKey) return
+  if (ParameterTextEditor.open) return
   e.preventDefault()
   QuickType.moveCursor(e.key === 'ArrowUp')
 })
