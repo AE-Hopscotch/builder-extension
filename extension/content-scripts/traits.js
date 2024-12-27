@@ -17,6 +17,7 @@ const TraitEditor = {
   init: function () {
     const container = this.container = document.getElementById('_AE_traits-editor')
     const traits = [
+      { id: 'title', name: 'Title', type: 'text', fields: 1, required: true, expand: true },
       { id: 'stageSize', name: 'Stage Size', type: 'number', fields: 2, separator: '\u00d7', pattern: '\\d+', required: true },
       { id: 'version', name: 'Editor Version', type: 'number', fields: 1, pattern: '\\d+', required: true },
       { id: 'playerVersion', name: 'Player Version', type: 'text', fields: 1, pattern: '^\\d+\\.\\d+\\.\\d+', required: true },
