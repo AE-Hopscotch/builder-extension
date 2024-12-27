@@ -2,7 +2,7 @@ module.exports = function (isFF) {
   const manifest = {
     name: 'Spider HS',
     description: 'Take the power of Hopscotch Project Builder with you into the Web Explorer!',
-    version: '0.1',
+    version: '0.3',
     host_permissions: [
       'https://c.gethopscotch.com/p/*',
       'https://explore.gethopscotch.com/c/*',
