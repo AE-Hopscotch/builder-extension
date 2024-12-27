@@ -5,6 +5,9 @@ module.exports = function (isFF) {
     version: '0.1',
     host_permissions: [
       'https://c.gethopscotch.com/p/*',
+      'https://explore.gethopscotch.com/c/*',
+      'https://explore.gethopscotch.com/u/*',
+      'https://explore.gethopscotch.com/profile/*',
       'https://explore.gethopscotch.com/edit/*',
       'https://explore.gethopscotch.com/create'
     ],
@@ -40,9 +43,18 @@ module.exports = function (isFF) {
     background: isFF ? { scripts: ['background.js'] } : { service_worker: 'background.js' },
     content_scripts: [
       {
-        matches: ['https://explore.gethopscotch.com/edit/*', 'https://explore.gethopscotch.com/create'],
+        matches: [
+          'https://explore.gethopscotch.com/edit/*', 'https://explore.gethopscotch.com/create'
+        ],
         js: ['/content-scripts/loader.js'],
         all_frames: true
+      },
+      {
+        matches: [
+          'https://explore.gethopscotch.com/c/*', 'https://explore.gethopscotch.com/u/*', 'https://explore.gethopscotch.com/profile/*'
+        ],
+        css: ['/content-scripts/explorer.css'],
+        js: ['/content-scripts/explorer.js']
       }
     ],
     icons: {
