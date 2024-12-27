@@ -33,6 +33,8 @@ You should get a message that says "Extension Loaded"
 
 You should get a message that says "Spider HS was added"
 
+## Extension Features
+- See the project's [Releases](https://github.com/AE-Hopscotch/builder-extension/releases) tab
 
 ## Running Development
 
