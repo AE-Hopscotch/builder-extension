@@ -104,6 +104,7 @@ function renderNotification (popup, notification) {
     addClickableThumbnail(container, notification)
   }
 }
+
 async function showNotifs (popup) {
   const result = await loadNotificationsData(1)
   if (!result) popup.innerText = 'Could not load notifications'
@@ -127,6 +128,8 @@ async function showNotifs (popup) {
 
 function addNotificationsTab () {
   if (!getUserIdFromPage()) return
+
+  document.body.classList.add('AENotifContainer')
 
   const notifButton = document.createElement('div')
   notifButton.classList.add('AENotifBtn')

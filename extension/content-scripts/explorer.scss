@@ -17,7 +17,7 @@ body.profile .AENotifBtn {
   right: 84px;
 }
 
-.topnav.fixed {
+.AENotifContainer .topnav.fixed {
   width: calc(100% - 142px);
   ~ .AENotifBtn {
     height: 51px;
@@ -77,4 +77,3 @@ body.profile .AENotifPopup {
   }
   
 }
-
